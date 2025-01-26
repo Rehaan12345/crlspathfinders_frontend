@@ -1,5 +1,5 @@
 <script>
-	import { Label, Input, Button, Modal, Textarea, Select } from 'flowbite-svelte';
+	import { Modal } from 'flowbite-svelte';
 	import RegisterForm from '../../registeryourclub/RegisterForm.svelte';
 
 	let selected = '';

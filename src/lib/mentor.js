@@ -86,7 +86,7 @@ export async function createMentor(
 		const url = SEND_URL + 'creatementor/';
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+			headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		const resData = await res.json();
@@ -135,7 +135,7 @@ export async function editMentor(
 		const url = SEND_URL + 'updatementor/';
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+			headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		const resData = await res.json();
@@ -153,9 +153,9 @@ export async function deleteMentor(email) {
 	const url = SEND_URL + 'deletementor/' + email;
 	try {
 		const res = await fetch(url, {
-			method: "GET",
+			method: 'GET',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			}
 		});
 		if (!res.ok) {
@@ -169,7 +169,7 @@ export async function deleteMentor(email) {
 	}
 }
 
-// Make a function that just sends the name of the old file to the backend for deletion (can copy format of uploadMentorImage) 
+// Make a function that just sends the name of the old file to the backend for deletion (can copy format of uploadMentorImage)
 
 export async function UploadMentorImage(file, oldFileName) {
 	let formData = new FormData();
@@ -182,7 +182,7 @@ export async function UploadMentorImage(file, oldFileName) {
 		let response = await fetch(url, {
 			method: 'POST',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			},
 			body: formData
 		});
@@ -208,7 +208,7 @@ export async function SetMentorImage(imgUrl, mentorEmail) {
 	const url = SEND_URL + 'setmentorimg/';
 	const response = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+		headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 	return response;
@@ -225,7 +225,7 @@ export async function sendMentorPitch(email, pitch) {
 	const url = SEND_URL + 'sendmentorpitch/';
 	const response = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+		headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 	console.log(response);
@@ -236,17 +236,17 @@ export async function retrieveDemographics() {
 	const url = SEND_URL + 'read/AllInfo/demographics';
 	try {
 		const res = await fetch(url, {
-			method: "GET",
+			method: 'GET',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			}
 		});
 		const wholeRes = await res.json();
 		console.log(wholeRes);
-		console.log("OK")
+		console.log('OK');
 		console.log(JSON.parse(wholeRes.collid));
 		const newDems = JSON.parse(wholeRes.collid);
-		console.log("OK")
+		console.log('OK');
 		listAcademics = newDems.academics;
 		listLanguages = newDems.languages;
 		listGenders = newDems.genders;
@@ -265,14 +265,14 @@ export async function sendMentorMenteeLogs(mentorEmail, menteeEmail, logDescript
 		mentee_email: menteeEmail,
 		log_description: logDescription,
 		log_hours: logHours
-	}
+	};
 
 	console.log(toSend);
 
 	const url = SEND_URL + 'mentormenteelogs/';
 	const response = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+		headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 
@@ -281,11 +281,11 @@ export async function sendMentorMenteeLogs(mentorEmail, menteeEmail, logDescript
 }
 
 export async function toggleMentorShow(mentor_email) {
-	const url = SEND_URL + "toggleshowmentor/" + mentor_email;
+	const url = SEND_URL + 'toggleshowmentor/' + mentor_email;
 	const response = await fetch(url, {
-		method: "GET",
+		method: 'GET',
 		headers: {
-			"Authorization": `Basic ${encodedCredentials}`
+			Authorization: `Basic ${encodedCredentials}`
 		}
 	});
 	const resData = await response.json();

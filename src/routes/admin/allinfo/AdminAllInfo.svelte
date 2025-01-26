@@ -1,13 +1,30 @@
 <script>
-    import { onMount } from "svelte";
-    import { getCollectionDoc, getCollection } from "../../../lib/api";
-    import { TableHeader, Section, SidebarBottomNav, SidebarBottomNavItem } from "flowbite-svelte-blocks";
-    import { Search, Button, Table, TableBody, TableBodyRow, Toggle, Spinner, Sidebar, SidebarGroup, SidebarItem, SidebarWrapper, SidebarDropdownItem, SidebarDropdownWrapper, Dropdown, DropdownItem, Modal, Label, Input, Select, Textarea } from "flowbite-svelte";
-    import { writable } from "svelte/store";
-    import { page } from "$app/stores";
-    import { ArrowRightAltSolid, BarsFromLeftOutline, CalendarEditOutline, CircleMinusSolid, CirclePlusSolid } from 'flowbite-svelte-icons';
-    import AllInfoData from "./AllInfoData.svelte";
-    import { addDocument } from "$lib/allinfo";
+    import { onMount } from 'svelte';
+    import { getCollection, getCollectionDoc } from '../../../lib/api';
+    import {
+        Button,
+        Input,
+        Label,
+        Modal,
+        Select,
+        Sidebar,
+        SidebarGroup,
+        SidebarItem,
+        SidebarWrapper,
+        Spinner
+    } from 'flowbite-svelte';
+    import { writable } from 'svelte/store';
+    import { page } from '$app/stores';
+    import {
+        ArrowRightAltSolid,
+        BarsFromLeftOutline,
+        CalendarEditOutline,
+        CircleMinusSolid,
+        CirclePlusSolid
+    } from 'flowbite-svelte-icons';
+    import AllInfoData from './AllInfoData.svelte';
+    import { addDocument } from '$lib/allinfo';
+
     let wholeReady = writable(false);
     let currCollection = writable("");
     let showSidebar = writable(true);

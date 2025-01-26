@@ -1,27 +1,26 @@
 <script>
 	import { onMount } from 'svelte';
 	import {
-		Button,
-		Modal,
-		Select,
-		Label,
-		Spinner,
-		P,
-		ListPlaceholder,
-		Search,
-		Toggle,
-		Input,
-		Textarea,
 		Alert,
-		MultiSelect
+		Button,
+		Input,
+		Label,
+		ListPlaceholder,
+		Modal,
+		MultiSelect,
+		Search,
+		Select,
+		Spinner,
+		Textarea,
+		Toggle
 	} from 'flowbite-svelte';
 	import { getCollection, sendMassEmail } from '../../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
-		roleChoices,
 		changeUserRole,
 		deleteUser,
 		getUserDocData,
+		roleChoices,
 		toggleLeaderMentor
 	} from '../../../lib/user';
 	import { user } from '../../../stores/auth';
@@ -33,8 +32,8 @@
 	let isLoading = writable(false);
 	let showMenteeLogs = writable(false);
 	let showSendMassEmail = writable(false);
-	let successMessage = writable("");
-	let errorMessage = writable("");
+	let successMessage = writable('');
+	let errorMessage = writable('');
 
 	let users = [];
 
@@ -49,34 +48,37 @@
 	let openRow;
 	let currI;
 
-	let emailSubject = "";
-	let emailBody = "";
+	let emailSubject = '';
+	let emailBody = '';
 	let recipientChoices = [
-		{"value": "Everyone", "name": "Everyone"},
-		{"value": "Teachers", "name": "Teachers"},
-		{"value": "Students", "name": "Students"},
-		{"value": "Admin", "name": "Admin"},
-		{"value": "Rehaan", "name": "Rehaan"}
-	]
+		{ value: 'Everyone', name: 'Everyone' },
+		{ value: 'Teachers', name: 'Teachers' },
+		{ value: 'Students', name: 'Students' },
+		{ value: 'Admin', name: 'Admin' },
+		{ value: 'Rehaan', name: 'Rehaan' }
+	];
 	let recipients = [];
 
 	const handleSendEmail = async () => {
 		try {
 			isLoading.set(true);
-			let coll = "Users";
-			if (recipients.indexOf("Rehaan") > -1) { coll = "Rehaan"; } console.log(coll);
+			let coll = 'Users';
+			if (recipients.indexOf('Rehaan') > -1) {
+				coll = 'Rehaan';
+			}
+			console.log(coll);
 			await sendMassEmail(coll, emailSubject, emailBody, recipients);
-			errorMessage.set(""); 
-			successMessage.set("Sent email");
-			emailSubject = "";
-			emailBody = "";
+			errorMessage.set('');
+			successMessage.set('Sent email');
+			emailSubject = '';
+			emailBody = '';
 		} catch (error) {
-			successMessage.set("");
+			successMessage.set('');
 			errorMessage.set(error);
 		} finally {
 			isLoading.set(false);
 		}
-	}
+	};
 
 	function handleDesc(desc) {
 		if (desc.length > 50) {
@@ -90,7 +92,7 @@
 		// findDescription(desc);
 		openRow = openRow === i ? null : i;
 	};
-	
+
 	function labelIncludesSearchTerm(label, searchTerm) {
 		if (typeof label === 'string' && typeof searchTerm === 'string') {
 			return label.toLowerCase().includes(searchTerm.toLowerCase());
@@ -202,13 +204,22 @@
 	<form on:submit={handleSendEmail}>
 		<Label>Subject</Label>
 		<Input type="text" bind:value={emailSubject} required></Input>
-		<Label>Recipients
-			<MultiSelect items={recipientChoices} bind:value={recipients} on:change={() => {console.log(recipients)}}></MultiSelect>
+		<Label
+			>Recipients
+			<MultiSelect
+				items={recipientChoices}
+				bind:value={recipients}
+				on:change={() => {
+					console.log(recipients);
+				}}
+			></MultiSelect>
 		</Label>
 		<Label>Body</Label>
 		<Textarea bind:value={emailBody} required></Textarea>
 		{#if $isLoading}
-			<Button type="submit" outline color="green" class="w-full" disabled>Loading <Spinner color="green" size={4} /></Button>
+			<Button type="submit" outline color="green" class="w-full" disabled
+				>Loading <Spinner color="green" size={4} /></Button
+			>
 		{:else}
 			<Button type="submit" outline color="green" class="w-full">Submit</Button>
 		{/if}
@@ -288,7 +299,7 @@
 						<!-- <tr class="border-b">
 							<td class="px-4 py-3 text-gray-800">Total hours worked: <b>{currMentor.total_hours_worked}</b></td>
 						</tr> -->
-						</tbody>
+					</tbody>
 				</table>
 			</div>
 		</div>
@@ -321,7 +332,9 @@
 								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Email</th>
 								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Grade</th>
 								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Is Leader</th>
-								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Is Mentor-Eligible</th>
+								<th scope="col" class="px-4 py-3" style="word-wrap:break-word"
+									>Is Mentor-Eligible</th
+								>
 								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Is Mentor</th>
 								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Is Mentee</th>
 								<th scope="col" class="px-4 py-3" style="word-wrap:break-word">Joined Clubs</th>
@@ -403,9 +416,15 @@
 										<td class="px-4 py-3">
 											{#if user.is_mentee}
 												<!-- <b>Yes</b> -->
-												<Button color="purple" outline size="xs" on:click={() => {
-													currUser = user;
-													openShowMenteeLogs()}}>
+												<Button
+													color="purple"
+													outline
+													size="xs"
+													on:click={() => {
+														currUser = user;
+														openShowMenteeLogs();
+													}}
+												>
 													Logs
 												</Button>
 											{:else}

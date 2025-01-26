@@ -1,6 +1,7 @@
 <script>
 	import { user } from '../stores/auth';
 	import { get } from 'svelte/store';
+
 	let message = '';
 
 	async function fetchProtectedData() {

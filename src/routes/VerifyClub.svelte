@@ -1,8 +1,6 @@
 <script>
-	import { Button, Modal, Spinner, Alert } from 'flowbite-svelte';
+	import { Alert, Button, Input, Modal, Spinner } from 'flowbite-svelte';
 	import { writable } from 'svelte/store';
-	import { onMount } from 'svelte';
-	import { Label, Input } from 'flowbite-svelte';
 	import { verifyClub } from '../lib/club';
 
 	let isLoading = writable(false);

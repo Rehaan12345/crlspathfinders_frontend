@@ -1,46 +1,25 @@
 <script>
 	import { onMount } from 'svelte';
 	import {
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		TableHead,
-		TableHeadCell,
-		TableSearch,
 		Button,
-		Dropdown,
-		DropdownItem,
-		Checkbox,
-		ButtonGroup,
-		Modal,
-		Spinner,
-		Toast,
-		ListPlaceholder,
-		Search,
 		Input,
 		Label,
+		ListPlaceholder,
+		Modal,
+		Search,
+		Spinner,
+		Table,
+		TableBodyCell,
+		TableBodyRow,
 		Textarea
 	} from 'flowbite-svelte';
-	import { Section } from 'flowbite-svelte-blocks';
+	import { TableHeader } from 'flowbite-svelte-blocks';
 	// import paginationData from '../utils/advancedTable.json'
-	import {
-		PlusOutline,
-		ChevronDownOutline,
-		FilterSolid,
-		ChevronRightOutline,
-		ChevronLeftOutline
-	} from 'flowbite-svelte-icons';
 	import { getCollection, sendMassEmail } from '../../../lib/api';
 	import EditClub from './EditClub.svelte';
-	import StatusModal from './StatusModal.svelte';
 	import { writable } from 'svelte/store';
 	import { changeStatus, deleteClub } from '../../../lib/club';
-	import { DotsHorizontalOutline, DotsVerticalOutline } from 'flowbite-svelte-icons';
-	import { ToolbarButton, DropdownDivider, Popover } from 'flowbite-svelte';
-	import { fly } from 'svelte/transition';
 	import { toggleClub } from '../../../lib/user';
-	import { TableHeader } from 'flowbite-svelte-blocks';
 
 	let wholeReady = writable(false);
 	let isLoading = writable(false);
@@ -58,22 +37,22 @@
 
 	let message = '';
 
-	let emailSubject = "";
-	let emailBody = "";
+	let emailSubject = '';
+	let emailBody = '';
 
 	const handleSendEmail = () => {
 		try {
 			isLoading.set(true);
-			sendMassEmail("Users", emailSubject, emailBody);
-			errorMessage.set(""); 
-			successMessage.set("Sent email");
+			sendMassEmail('Users', emailSubject, emailBody);
+			errorMessage.set('');
+			successMessage.set('Sent email');
 		} catch (error) {
-			successMessage.set("");
+			successMessage.set('');
 			errorMessage.set(error);
 		} finally {
 			isLoading.set(false);
 		}
-	}
+	};
 
 	function labelIncludesSearchTerm(label, searchTerm) {
 		if (typeof label === 'string' && typeof searchTerm === 'string') {
@@ -211,7 +190,9 @@
 		<Label>Body</Label>
 		<Textarea bind:value={emailBody} required></Textarea>
 		{#if $isLoading}
-			<Button type="submit" outline color="green" class="w-full" disabled>Loading <Spinner color="green" size="xs"/></Button>
+			<Button type="submit" outline color="green" class="w-full" disabled
+				>Loading <Spinner color="green" size="xs" /></Button
+			>
 		{:else}
 			<Button type="submit" outline color="green" class="w-full">Submit</Button>
 		{/if}

@@ -1,16 +1,13 @@
 <script>
-	import { onMount } from 'svelte';
-	import { Section, Register } from 'flowbite-svelte-blocks';
-	import { Button, Checkbox, Label, Input, Spinner } from 'flowbite-svelte';
+	import { Register, Section } from 'flowbite-svelte-blocks';
+	import { Alert, Button, Input, Label, Spinner } from 'flowbite-svelte';
 	import { auth } from '../../../lib/auth/firebaseConfig';
 	import { createUserWithEmailAndPassword } from 'firebase/auth';
 	import { user } from '../../../stores/auth';
 	import { makeUser } from '../../../lib/auth/signup';
 	import { writable } from 'svelte/store';
-	import { Alert } from 'flowbite-svelte';
 	import { goto } from '$app/navigation';
-	import { getUserDocData, getCurrEmail, setCurrEmail } from '../../../lib/user';
-	import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
+	import { getUserDocData, setCurrEmail } from '../../../lib/user';
 
 	// Send email confirmation:
 	// const actionCodeSettings = {
@@ -34,7 +31,7 @@
 	// 		const errorCode = error.code;
 	// 		const errorMessage = error.message;
 	// 		// ...
-	// 	});	
+	// 	});
 
 	const SEND_URL = import.meta.env.VITE_URL;
 

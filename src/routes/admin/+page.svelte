@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { Tabs, TabItem, Spinner, ListPlaceholder } from 'flowbite-svelte';
+	import { Button, ListPlaceholder, Spinner, TabItem, Tabs } from 'flowbite-svelte';
 	import AdminClub from './clubs/AdminClub.svelte';
 	import AdminMentor from './mentors/AdminMentor.svelte';
 	import AdminUser from './users/AdminUser.svelte';
@@ -10,8 +10,7 @@
 	import { getUserDocData } from '../../lib/user';
 	import { writable } from 'svelte/store';
 	import NoAccessPage from '../NoAccessPage.svelte';
-	import { Section, Page404 } from 'flowbite-svelte-blocks';
-	import { Button } from 'flowbite-svelte';
+	import { Page404, Section } from 'flowbite-svelte-blocks';
 
 	let wholeReady = writable(false);
 
@@ -34,7 +33,6 @@
 </script>
 
 {#if $user}
-
 	{#if $wholeReady}
 		{#if userInfo}
 			{#if userInfo.role == 'Super Admin' || userInfo.role == 'Admin'}
@@ -69,9 +67,7 @@
 			</center>
 		{/if}
 	{/if}
-
 {:else}
-		
 	<Section name="page404">
 		<Page404>
 			<svelte:fragment slot="paragraph">
@@ -83,8 +79,10 @@
 			</svelte:fragment>
 		</Page404>
 		<center>
-			<img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fimsorryemoji.jpg?alt=media&token=d4eb6c40-4098-4a11-a4a5-9cf1103ff527" alt="I'm sorry">
+			<img
+				src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fimsorryemoji.jpg?alt=media&token=d4eb6c40-4098-4a11-a4a5-9cf1103ff527"
+				alt="I'm sorry"
+			/>
 		</center>
 	</Section>
-
 {/if}

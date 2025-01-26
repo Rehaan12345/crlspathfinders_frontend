@@ -5,24 +5,25 @@ const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode
 
 export let wholeWebsiteData = [];
 
-export function updateWholeWebsiteData(id, info, extraInfo={}) { // Add extraInfo later
+export function updateWholeWebsiteData(id, info, extraInfo = {}) {
+	// Add extraInfo later
 	const add = {
 		id,
 		info
-	}
+	};
 	wholeWebsiteData.push(add);
 }
 
 export async function getCollection(collection) {
 	try {
-		console.log("send url: ");
+		console.log('send url: ');
 		console.log(SEND_URL);
 		const url = SEND_URL + 'read/' + collection;
 		console.log(url);
 		const res = await fetch(url, {
-			method: "GET",
+			method: 'GET',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			}
 		});
 		if (!res.ok) {
@@ -33,17 +34,20 @@ export async function getCollection(collection) {
 
 		const status = resData.status;
 		if (status == 0) {
-			const collection = JSON.parse(resData.collection)
-			return collection
+			const collection = JSON.parse(resData.collection);
+			return collection;
 		} else if (status == -1) {
-			const sentEmail = await sendOneEmail("getCollectionError", resData.error_message, "crlspathfinders25@gmail.com");
+			const sentEmail = await sendOneEmail(
+				'getCollectionError',
+				resData.error_message,
+				'crlspathfinders25@gmail.com'
+			);
 			console.log(sentEmail);
-			return resData.error_message
+			return resData.error_message;
 		}
-
 	} catch (error) {
 		console.log("Couldn't retrieve / fetch getvals data: " + error);
-		return {"status": -1, "error_message": "Failed to retrieve collection data: " + error};
+		return { status: -1, error_message: 'Failed to retrieve collection data: ' + error };
 	}
 }
 
@@ -51,9 +55,9 @@ export async function getCollectionDoc(collection, docId) {
 	try {
 		const url = SEND_URL + 'read/' + collection + '/' + docId;
 		const res = await fetch(url, {
-			method: "GET",
+			method: 'GET',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			}
 		});
 		if (!res.ok) {
@@ -79,9 +83,9 @@ export async function deleteDoc(collection, id) {
 	try {
 		const url = SEND_URL + 'delete/' + collection + '/' + id;
 		const res = await fetch(url, {
-			method: "GET",
+			method: 'GET',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			}
 		});
 		if (!res.ok) {
@@ -98,7 +102,7 @@ export async function deleteDoc(collection, id) {
 }
 
 export async function getBackendCache(collection) {
-	const url = SEND_URL + "cache/" + collection;
+	const url = SEND_URL + 'cache/' + collection;
 	const res = await fetch(url);
 	if (!res.ok) {
 		console.log('Failure to get cached collection');
@@ -106,7 +110,7 @@ export async function getBackendCache(collection) {
 	}
 	const resData = await res.json();
 	const result = JSON.parse(resData);
-	
+
 	return result;
 }
 // TODO: Function that brings in data from local storage at a defined value
@@ -161,16 +165,16 @@ export async function updateCache(key) {
 }
 
 export async function sendMassEmail(collection, subject, body, recipients) {
-	const url = SEND_URL + "emailall/";
+	const url = SEND_URL + 'emailall/';
 	const toSend = {
 		collection,
 		subject,
 		body,
 		recipients
-	}
+	};
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+		headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 	const resData = await res.json();
@@ -179,12 +183,12 @@ export async function sendMassEmail(collection, subject, body, recipients) {
 }
 
 export async function sendOneEmail(subject, body, reciever) {
-	console.log("email starting");
-	const url = SEND_URL + "emailone/" + subject + "/" + body + "/" + reciever;
+	console.log('email starting');
+	const url = SEND_URL + 'emailone/' + subject + '/' + body + '/' + reciever;
 	const res = await fetch(url, {
-		method: "GET",
+		method: 'GET',
 		headers: {
-			"Authorization": `Basic ${encodedCredentials}`
+			Authorization: `Basic ${encodedCredentials}`
 		}
 	});
 	const resData = await res.json();

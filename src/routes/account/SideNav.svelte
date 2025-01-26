@@ -1,9 +1,8 @@
 <script>
-	import { Tabs, TabItem } from 'flowbite-svelte';
+	import { TabItem, Tabs } from 'flowbite-svelte';
 	import AccountItem from './Items/AccountItem.svelte';
 	import { onMount } from 'svelte';
-	import { getCollection } from '../../lib/api';
-	import { fetchUserInfo, getUserDocData } from '../../lib/user';
+	import { getUserDocData } from '../../lib/user';
 	import { user } from '../../stores/auth';
 	import ClubItem from './Items/ClubItem.svelte';
 

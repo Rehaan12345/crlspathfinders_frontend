@@ -1,48 +1,28 @@
 <script>
 	import { onMount } from 'svelte';
 	import {
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		TableHead,
-		TableHeadCell,
-		TableSearch,
-		Button,
-		Dropdown,
-		DropdownItem,
-		Checkbox,
-		ButtonGroup,
-		A,
-		Modal,
-		Spinner,
-		ListPlaceholder,
-		Search,
-		Toggle,
-		P,
+		Alert,
 		Badge,
-		TabItem,
-		Tabs,
+		Button,
 		Input,
 		Label,
+		ListPlaceholder,
+		Modal,
+		P,
+		Search,
+		Spinner,
+		TabItem,
+		Tabs,
 		Textarea,
-		Alert
+		Toggle
 	} from 'flowbite-svelte';
-	import { Section } from 'flowbite-svelte-blocks';
+	import { TableHeader } from 'flowbite-svelte-blocks';
 	// import paginationData from '../utils/advancedTable.json'
-	import {
-		PlusOutline,
-		ChevronDownOutline,
-		FilterSolid,
-		ChevronRightOutline,
-		ChevronLeftOutline
-	} from 'flowbite-svelte-icons';
 	import { getCollection, sendMassEmail } from '../../../lib/api';
 	import EditMentor from './EditMentor.svelte';
 	import { writable } from 'svelte/store';
 	import { deleteMentor, toggleMentorShow } from '../../../lib/mentor';
-	import { TableHeader } from 'flowbite-svelte-blocks';
-	import { getMentees } from "$lib/user";
+	import { getMentees } from '$lib/user';
 
 	let wholeReady = writable(false);
 	let deleteMentorConfirmModal = writable(false);
@@ -50,8 +30,8 @@
 	let showCatalogModal = writable(false);
 	let showSendMassEmail = writable(false);
 	let isLoading = writable(false);
-	let successMessage = writable("");
-	let errorMessage = writable("");
+	let successMessage = writable('');
+	let errorMessage = writable('');
 
 	let mentors = [];
 
@@ -72,24 +52,24 @@
 	let openRow;
 	let currI;
 
-	let emailSubject = "";
-	let emailBody = "";
+	let emailSubject = '';
+	let emailBody = '';
 
 	const handleSendEmail = async () => {
 		try {
 			isLoading.set(true);
-			await sendMassEmail("Mentors", emailSubject, emailBody);
-			errorMessage.set(""); 
-			successMessage.set("Sent email");
-			emailSubject = "";
-			emailBody = "";
+			await sendMassEmail('Mentors', emailSubject, emailBody);
+			errorMessage.set('');
+			successMessage.set('Sent email');
+			emailSubject = '';
+			emailBody = '';
 		} catch (error) {
-			successMessage.set("");
+			successMessage.set('');
 			errorMessage.set(error);
 		} finally {
 			isLoading.set(false);
 		}
-	}
+	};
 
 	function handleBio(bio) {
 		if (bio.length > 50) {
@@ -126,7 +106,7 @@
 		} finally {
 			mentors = await getCollection('Mentors');
 		}
-	}
+	};
 
 	const handleDelete = async (email) => {
 		removeLoading.set(true);
@@ -175,7 +155,9 @@
 		<Label>Body</Label>
 		<Textarea bind:value={emailBody} required></Textarea>
 		{#if $isLoading}
-			<Button type="submit" outline color="green" class="w-full" disabled>Loading <Spinner color="green" size={4}/></Button>
+			<Button type="submit" outline color="green" class="w-full" disabled
+				>Loading <Spinner color="green" size={4} /></Button
+			>
 		{:else}
 			<Button type="submit" outline color="green" class="w-full">Submit</Button>
 		{/if}
@@ -191,7 +173,6 @@
 		{/if}
 	</form>
 </Modal>
-
 
 {#if $deleteMentorConfirmModal}
 	<Modal
@@ -220,7 +201,15 @@
 <!-- Mentor Catalog Modal: -->
 <Modal class="min-w-full" open={$showCatalogModal} on:close={closeShowCatalogModal} size="lg">
 	<P size="xl">Mentor Hours</P>
-	<P size="md">Something doesn't look right? Let us know at <u><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">crlspathfinders25@gmail.com</a></u></P>
+	<P size="md"
+		>Something doesn't look right? Let us know at <u
+			><a
+				target="_blank"
+				href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support"
+				>crlspathfinders25@gmail.com</a
+			></u
+		></P
+	>
 	<div>
 		<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
 			<div class="overflow-x-auto">
@@ -239,25 +228,31 @@
 							<tr class="border-b">
 								<td class="px-4 py-3 text-gray-800">{i + 1} | {c.mentee}</td>
 								{#if openRow === i}
-									<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, c)}>
+									<td
+										class="px-4 py-3 text-gray-700"
+										style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word"
+										on:click={() => toggleRow(i, c)}
+									>
 										<div class="mentordescription">
 											{c.description}
 										</div>
 									</td>
+								{:else if c.description.length > 50}
+									<td
+										class="px-4 py-3 text-gray-700"
+										style="cursor:pointer;"
+										on:click={() => toggleRow(i, c)}
+									>
+										<div class="mentordescription">
+											{handleDesc(c.description)}
+										</div>
+									</td>
 								{:else}
-									{#if c.description.length > 50 }
-										<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, c)}>
-											<div class="mentordescription">
-												{handleDesc(c.description)}
-											</div>
-										</td>
-									{:else}
-										<td class="px-4 py-3 text-gray-700">
-											<div class="mentordescription">
-												{handleDesc(c.description)}
-											</div>
-										</td>
-									{/if}
+									<td class="px-4 py-3 text-gray-700">
+										<div class="mentordescription">
+											{handleDesc(c.description)}
+										</div>
+									</td>
 								{/if}
 								<td class="px-4 py-3 text-gray-700">{c.hours}</td>
 								<td class="px-4 py-3 text-gray-700">{c.date}</td>
@@ -274,10 +269,12 @@
 						{/each}
 						<tr class="border-b">
 							<td class="px-4 py-3 text-gray-800">
-								<Badge color="green">Total hours worked: <b> {currMentor.total_hours_worked}</b></Badge>
+								<Badge color="green"
+									>Total hours worked: <b> {currMentor.total_hours_worked}</b></Badge
+								>
 							</td>
 						</tr>
-						</tbody>
+					</tbody>
 				</table>
 			</div>
 		</div>
@@ -365,7 +362,16 @@
 												></Toggle>
 											</td>
 											<td class="px-4 py-3">
-												<Button size="xs" style="margin-left:1rem; margin-top:1rem;" outline color="purple" on:click={() => {openShowCatalogModal(); currMentor = m;}}>
+												<Button
+													size="xs"
+													style="margin-left:1rem; margin-top:1rem;"
+													outline
+													color="purple"
+													on:click={() => {
+														openShowCatalogModal();
+														currMentor = m;
+													}}
+												>
 													Show Mentor Catalog
 												</Button>
 											</td>
@@ -430,46 +436,58 @@
 											<td class="px-4 py-3">{m.date_confirmed}</td>
 											<td class="px-4 py-3">{m.hours}</td>
 											{#if openRow === i}
-												<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, m)}>
+												<td
+													class="px-4 py-3 text-gray-700"
+													style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word"
+													on:click={() => toggleRow(i, m)}
+												>
 													<div class="mentordescription">
 														{m.mentee_description}
 													</div>
 												</td>
+											{:else if m.mentee_description.length > 50}
+												<td
+													class="px-4 py-3 text-gray-700"
+													style="cursor:pointer;"
+													on:click={() => toggleRow(i, m)}
+												>
+													<div class="mentordescription">
+														{handleDesc(m.mentee_description)}
+													</div>
+												</td>
 											{:else}
-												{#if m.mentee_description.length > 50 }
-													<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, m)}>
-														<div class="mentordescription">
-															{handleDesc(m.mentee_description)}
-														</div>
-													</td>
-												{:else}
-													<td class="px-4 py-3 text-gray-700">
-														<div class="mentordescription">
-															{handleDesc(m.mentee_description)}
-														</div>
-													</td>
-												{/if}
+												<td class="px-4 py-3 text-gray-700">
+													<div class="mentordescription">
+														{handleDesc(m.mentee_description)}
+													</div>
+												</td>
 											{/if}
 											{#if openRow === i}
-												<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, m)}>
+												<td
+													class="px-4 py-3 text-gray-700"
+													style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word"
+													on:click={() => toggleRow(i, m)}
+												>
 													<div class="mentordescription">
 														{m.mentor_description}
 													</div>
 												</td>
+											{:else if m.mentor_description.length > 50}
+												<td
+													class="px-4 py-3 text-gray-700"
+													style="cursor:pointer;"
+													on:click={() => toggleRow(i, m)}
+												>
+													<div class="mentordescription">
+														{handleDesc(m.mentor_description)}
+													</div>
+												</td>
 											{:else}
-												{#if m.mentor_description.length > 50 }
-													<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, m)}>
-														<div class="mentordescription">
-															{handleDesc(m.mentor_description)}
-														</div>
-													</td>
-												{:else}
-													<td class="px-4 py-3 text-gray-700">
-														<div class="mentordescription">
-															{handleDesc(m.mentor_description)}
-														</div>
-													</td>
-												{/if}
+												<td class="px-4 py-3 text-gray-700">
+													<div class="mentordescription">
+														{handleDesc(m.mentor_description)}
+													</div>
+												</td>
 											{/if}
 										</tr>
 									{/if}
@@ -481,7 +499,6 @@
 			</div>
 		</TabItem>
 	</Tabs>
-
 {:else}
 	<center>
 		Gathering Data ... <Spinner color="green" />

@@ -1,28 +1,26 @@
 <script>
 	import { onMount } from 'svelte';
 	import {
-		Card,
+		Badge,
 		Button,
 		ButtonGroup,
-		Spinner,
-		Toast,
-		P,
+		Card,
 		CardPlaceholder,
-		Search,
-		Popover,
 		Heading,
-		Span
+		P,
+		Popover,
+		Search,
+		Span,
+		Spinner,
+		Toast
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
-	import { ArrowRightOutline } from 'flowbite-svelte-icons';
-	import { getCollection, sendOneEmail } from '$lib/api';
+	import { getCollection, sendOneEmail, updateWholeWebsiteData, wholeWebsiteData } from '$lib/api';
 	import { user } from '../../stores/auth';
 	import { getUserDocData, toggleClub } from '../../lib/user';
 	import { writable } from 'svelte/store';
 	import { fly } from 'svelte/transition';
-	import { Badge } from 'flowbite-svelte';
-	import { wholeWebsiteData, updateWholeWebsiteData } from "$lib/api";
-	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
+
 	const SEND_URL = import.meta.env.VITE_URL;
 
 	let wholeReady = writable(false);
@@ -86,31 +84,35 @@
 		try {
 			// const sendMail = await sendOneEmail("club card on mount", "works!", "crlspathfinders25@gmail.com")
 			// console.log(sendMail);
-			let targetId = wholeWebsiteData.findIndex(item => item.id === "clubs");
-			console.log("target id: ", targetId)
+			let targetId = wholeWebsiteData.findIndex((item) => item.id === 'clubs');
+			console.log('target id: ', targetId);
 			if (targetId > -1) {
 				clubs = wholeWebsiteData[targetId].info;
 			} else {
 				clubs = await getCollection('Clubs');
-				updateWholeWebsiteData("clubs", clubs);
+				updateWholeWebsiteData('clubs', clubs);
 			}
 
-			targetId = wholeWebsiteData.findIndex(item => item.id === "allinfo");
+			targetId = wholeWebsiteData.findIndex((item) => item.id === 'allinfo');
 			if (targetId > -1) {
 				const allInfo = wholeWebsiteData[targetId].info;
 				for (let i = 0; i < allInfo.length; i++) {
-					if (allInfo[i].id == "findaclub") { info = allInfo[i].info; }
+					if (allInfo[i].id == 'findaclub') {
+						info = allInfo[i].info;
+					}
 				}
 			} else {
-				const allInfo = await getCollection("AllInfo");
+				const allInfo = await getCollection('AllInfo');
 				for (let i = 0; i < allInfo.length; i++) {
-					if (allInfo[i].id == "findaclub") { info = allInfo[i].info; }
+					if (allInfo[i].id == 'findaclub') {
+						info = allInfo[i].info;
+					}
 				}
-				updateWholeWebsiteData("allinfo", allInfo);
+				updateWholeWebsiteData('allinfo', allInfo);
 			}
 
 			let loggedInUser;
-			targetId = wholeWebsiteData.findIndex(item => item.id === "loggedInUser");
+			targetId = wholeWebsiteData.findIndex((item) => item.id === 'loggedInUser');
 			if (targetId > -1) {
 				loggedInUser = wholeWebsiteData[targetId].info;
 				email = loggedInUser.email;
@@ -119,15 +121,18 @@
 					if (value) {
 						email = value.email;
 						loggedInUser = await getUserDocData(email);
-						updateWholeWebsiteData("loggedInUser", loggedInUser);
+						updateWholeWebsiteData('loggedInUser', loggedInUser);
 					} else {
 						email = '';
 					}
 				});
 			}
-			
 		} catch (error) {
-			const sendMail = await sendOneEmail("club card on mount error", error, "crlspathfinders25@gmail.com")
+			const sendMail = await sendOneEmail(
+				'club card on mount error',
+				error,
+				'crlspathfinders25@gmail.com'
+			);
 			console.log(sendMail);
 			console.error('Onmount failed: ' + error);
 		} finally {
@@ -147,37 +152,40 @@
 {/if}
 
 <div class="wholeclubwrapper bg-gray-100" style="height:100%;">
-	
 	{#if $wholeReady}
-	<div class="titleinfowrapper" style="margin-left: 3rem;">
-		<br />
-		<Heading><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">Find</Span> a Club</Heading>
-		<br />
-		{#each info as inf, i}
-			{#if i == 0}
-				<P size="xl">{inf}</P>
-			{:else if i == 1}
-				<P size="lg">{inf}</P>
-			{:else}
-				<P size="sm">{inf}</P>
-			{/if}
-		{/each}
-		<!-- <P size="xl">
+		<div class="titleinfowrapper" style="margin-left: 3rem;">
+			<br />
+			<Heading
+				><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600"
+					>Find</Span
+				> a Club</Heading
+			>
+			<br />
+			{#each info as inf, i}
+				{#if i == 0}
+					<P size="xl">{inf}</P>
+				{:else if i == 1}
+					<P size="lg">{inf}</P>
+				{:else}
+					<P size="sm">{inf}</P>
+				{/if}
+			{/each}
+			<!-- <P size="xl">
 			Scroll through the available clubs within CRLS! You can look at when clubs meet, who else is
 			in the club, what their mission statement is, and so much more!
 		</P> -->
-		<P size="lg">
-			Interested in <u><a href="/registeryourclub">registering</a></u> your club? Please follow the
-			steps
-			<u
-				><a
-					target="_blank"
-					href="https://docs.google.com/document/d/1KE2f7uTJbHAJTiiC_QR9EC_LPuOrgRl2xr2qtWoNaeo/edit?tab=t.0"
-					>here</a
-				></u
-			>!
-		</P>
-	</div>
+			<P size="lg">
+				Interested in <u><a href="/registeryourclub">registering</a></u> your club? Please follow
+				the steps
+				<u
+					><a
+						target="_blank"
+						href="https://docs.google.com/document/d/1KE2f7uTJbHAJTiiC_QR9EC_LPuOrgRl2xr2qtWoNaeo/edit?tab=t.0"
+						>here</a
+					></u
+				>!
+			</P>
+		</div>
 
 		<div class="searchwrapper" style="margin-right:3rem;margin-left:3rem;margin-top:1rem;">
 			<TableHeader headerType="search">
