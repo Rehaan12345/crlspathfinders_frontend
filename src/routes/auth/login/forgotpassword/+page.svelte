@@ -1,8 +1,8 @@
 <script>
 	import { auth } from '$lib/auth/firebaseConfig';
 	import { sendPasswordResetEmail } from 'firebase/auth';
-	import { Section, Register } from 'flowbite-svelte-blocks';
-	import { Button, Checkbox, Label, Input, Spinner, Alert } from 'flowbite-svelte';
+	import { Register, Section } from 'flowbite-svelte-blocks';
+	import { Alert, Button, Input, Label, Spinner } from 'flowbite-svelte';
 	import { writable } from 'svelte/store';
 
 	let email = '';

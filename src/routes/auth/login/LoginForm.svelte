@@ -1,15 +1,13 @@
 <script>
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { Section, Register } from 'flowbite-svelte-blocks';
-	import { Button, Checkbox, Label, Input, Spinner, Alert } from 'flowbite-svelte';
+	import { Register, Section } from 'flowbite-svelte-blocks';
+	import { Alert, Button, Checkbox, Input, Label, Spinner } from 'flowbite-svelte';
 	import { auth } from '../../../lib/auth/firebaseConfig';
 	import { signInWithEmailAndPassword } from 'firebase/auth';
-	import { user } from '../../../stores/auth';
 	import { toggleLoggedIn } from '../../../lib/auth/login';
 	import { writable } from 'svelte/store';
 	import { googleSignUp } from '../../../lib/auth/googlesignup';
-	import { retrieveUserInfo } from "$lib/cache";
+	import { retrieveUserInfo } from '$lib/cache';
 
 	let email;
 	let password;

@@ -1,47 +1,42 @@
 <script>
 	import { onMount } from 'svelte';
-	import { Section } from 'flowbite-svelte-blocks';
-	import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
+	import { updateCache } from '$lib/cache';
 	import {
-		Label,
-		Input,
-		Button,
-		Select,
-		Textarea,
-		P,
-		Spinner,
+		Accordion,
+		AccordionItem,
 		Alert,
 		Avatar,
+		Button,
 		Heading,
+		Input,
+		Label,
+		Li,
+		List,
+		P,
 		Popover,
 		Skeleton,
-		Span
+		Span,
+		Spinner,
+		Textarea
 	} from 'flowbite-svelte';
-	import { getCollectionDoc, getCollection } from '$lib/api';
+	import { getCollection, getCollectionDoc } from '$lib/api';
 	import {
 		createMentor,
 		editMentor,
-		races,
-		religions,
-		genders,
-		languages,
-		academics,
-		UploadMentorImage,
-		SetMentorImage,
-		sendMentorPitch,
 		listAcademics,
 		listGenders,
 		listLanguages,
 		listRaces,
 		listReligions,
-		retrieveDemographics
+		retrieveDemographics,
+		sendMentorPitch,
+		SetMentorImage,
+		UploadMentorImage
 	} from '../../lib/mentor';
 	import { user } from '../../stores/auth';
 	import { writable } from 'svelte/store';
 	import { getUserDocData } from '../../lib/user';
 	import MultiSelect from 'svelte-multiselect';
-	import { AccordionItem, Accordion } from 'flowbite-svelte';
-	import { List, Li } from 'flowbite-svelte';
 
 	let wholeReady = writable(false);
 	let isLoading = writable(false);
@@ -193,8 +188,8 @@
 			console.log('Failed to register / edit mentor: ' + error);
 			errorMessage.set('' + error);
 		} finally {
-			const new_mentors = await getCollection("Mentors");
-			updateCache("mentorsInfo", new_mentors);
+			const new_mentors = await getCollection('Mentors');
+			updateCache('mentorsInfo', new_mentors);
 			if (academicsSelected.length < 1) {
 				showSubmitImage.set(false);
 				isLoading.set(false);
@@ -256,9 +251,8 @@
 			}
 			wholeReady.set(true);
 		} catch (error) {
-			console.log("Error loading: " + error);
+			console.log('Error loading: ' + error);
 		}
-		
 	});
 
 	export let view = '';
@@ -275,7 +269,11 @@
 	{#if $wholeReady}
 		{#if loggedInUser}
 			{#if !showVals && !loggedInUser.mentor_eligible}
-				<Heading tag="h2" customSize="text-4xl font-extrabold "><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">Become</Span> a mentor</Heading>
+				<Heading tag="h2" customSize="text-4xl font-extrabold "
+					><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600"
+						>Become</Span
+					> a mentor</Heading
+				>
 
 				<div class="mentoreligibilewrapper" style="border-radius:10px;margin-top:1rem;">
 					<P class="mb-3" weight="light" color="text-gray-600">
@@ -383,9 +381,12 @@
 					</form>
 				</div>
 			{:else if $restReady}
-				
-				<Heading tag="h2" customSize="text-4xl font-extrabold "><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600">{view}</Span> Mentor</Heading>
-				<br>
+				<Heading tag="h2" customSize="text-4xl font-extrabold "
+					><Span underline decorationClass="decoration-8 decoration-red-800 dark:decoration-red-600"
+						>{view}</Span
+					> Mentor</Heading
+				>
+				<br />
 				<form on:submit={handleSubmit}>
 					<div class="grid gap-4 sm:grid-cols-2 sm:gap-6 bg-gray-100" style="height: 100%;">
 						<div class="w-full">

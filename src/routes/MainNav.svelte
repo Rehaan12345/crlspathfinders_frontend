@@ -1,19 +1,18 @@
 <script>
 	import {
-		Navbar,
-		NavBrand,
-		NavLi,
-		NavUl,
-		NavHamburger,
 		Dropdown,
 		DropdownItem,
-		Avatar
+		Navbar,
+		NavBrand,
+		NavHamburger,
+		NavLi,
+		NavUl
 	} from 'flowbite-svelte';
 	import { ChevronDownOutline } from 'flowbite-svelte-icons';
 	import { page } from '$app/stores';
-	import { user, logout } from '../stores/auth';
+	import { logout, user } from '../stores/auth';
 	import { onMount } from 'svelte';
-	import { getUserDocData, getCurrEmail, setCurrEmail } from '../lib/user';
+	import { getCurrEmail, getUserDocData } from '../lib/user';
 	import VerifyClub from './VerifyClub.svelte';
 	import { writable } from 'svelte/store';
 
@@ -58,8 +57,14 @@
 
 <Navbar let:NavContainer color="black">
 	<NavBrand href="/">
-		<img src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpathfinderslogo_nobackground.png?alt=media&token=58a95374-adfd-4c0f-b724-a5bbd6ed7ea5" class="me-3 h-6 sm:h-9" alt="PathFinders Logo" />
-		<span class="self-center whitespace-nowrap text-xl font-semibold text-black">CRLS PathFinders</span>
+		<img
+			src="https://firebasestorage.googleapis.com/v0/b/crlspathfinders-82886.appspot.com/o/other-images%2Fpathfinderslogo_nobackground.png?alt=media&token=58a95374-adfd-4c0f-b724-a5bbd6ed7ea5"
+			class="me-3 h-6 sm:h-9"
+			alt="PathFinders Logo"
+		/>
+		<span class="self-center whitespace-nowrap text-xl font-semibold text-black"
+			>CRLS PathFinders</span
+		>
 	</NavBrand>
 	<NavHamburger />
 	<NavUl {activeUrl} {activeClass} {nonActiveClass}>

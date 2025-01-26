@@ -17,7 +17,7 @@ export async function addLink(linkname, linkurl, categories, bio, deadline) {
 	try {
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+			headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		console.log(res);
@@ -32,9 +32,9 @@ export async function deleteLink(linkName) {
 
 	try {
 		const res = await fetch(url, {
-			method: "GET",
+			method: 'GET',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			}
 		});
 		const resResponse = await res.json();
@@ -62,7 +62,7 @@ export async function editLink(oldName, newName, newUrl, categories, bio, deadli
 	try {
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+			headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		console.log(res);
@@ -91,7 +91,7 @@ export async function editCategories(oldCatName, newCatName) {
 
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+		headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 }
@@ -105,7 +105,7 @@ export async function addCategory(newCat) {
 
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+		headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 }
@@ -119,7 +119,7 @@ export async function deleteCategory(catName) {
 
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+		headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 }

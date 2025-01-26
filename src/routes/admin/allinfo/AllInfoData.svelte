@@ -1,34 +1,16 @@
 <script>
 	import { onMount } from 'svelte';
-	import { getCollectionDoc, getCollection, deleteDoc } from '../../../lib/api';
+	import { deleteDoc, getCollection, getCollectionDoc } from '../../../lib/api';
+	import { TableHeader } from 'flowbite-svelte-blocks';
 	import {
-		TableHeader,
-		Section,
-		SidebarBottomNav,
-		SidebarBottomNavItem
-	} from 'flowbite-svelte-blocks';
-	import {
-		Search,
-		Button,
-		Table,
-		TableBody,
-		TableBodyRow,
-		Toggle,
-		Spinner,
-		Sidebar,
-		SidebarGroup,
-		SidebarItem,
-		SidebarWrapper,
-		SidebarDropdownItem,
-		SidebarDropdownWrapper,
-		Dropdown,
-		DropdownItem,
-		A,
 		Badge,
+		Button,
+		ButtonGroup,
 		Input,
 		Modal,
-		P,
-        ButtonGroup
+		Search,
+		Spinner,
+		Toggle
 	} from 'flowbite-svelte';
 	import { writable } from 'svelte/store';
 	import { CheckCircleOutline, CloseOutline, TrashBinOutline } from 'flowbite-svelte-icons';
@@ -299,21 +281,28 @@
 				>
 			{/if}
 			{#if $confirmDeleteDoc}
-                <ButtonGroup>
-                    <Button outline color="blue" on:click={() => {confirmDeleteDoc.set(false);}}>
-                        Cancel
-                    </Button>
-                    <Button outline color="purple" on:click={handleDeleteDoc}>
-                        Confirm <TrashBinOutline></TrashBinOutline>
-                    </Button>
-                </ButtonGroup>
+				<ButtonGroup>
+					<Button
+						outline
+						color="blue"
+						on:click={() => {
+							confirmDeleteDoc.set(false);
+						}}
+					>
+						Cancel
+					</Button>
+					<Button outline color="purple" on:click={handleDeleteDoc}>
+						Confirm <TrashBinOutline></TrashBinOutline>
+					</Button>
+				</ButtonGroup>
 			{:else}
 				<Button
 					outline
 					color="red"
 					on:click={() => {
 						confirmDeleteDoc.set(true);
-					}}>
+					}}
+				>
 					Delete Document <TrashBinOutline></TrashBinOutline>
 				</Button>
 			{/if}
@@ -347,7 +336,7 @@
 									{:else if typeof value == 'object'}
 										<td class="px-4 py-3">
 											{#each value as v}
-                                                <div class="listwrapper">
+												<div class="listwrapper">
 													<div class="indlistbadge">
 														<div class="wholebadge">
 															<Badge color="blue" style="padding: .5rem;">

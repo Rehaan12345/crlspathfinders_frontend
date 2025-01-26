@@ -3,7 +3,7 @@ const password = import.meta.env.VITE_AUTH_PASSWORD;
 const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode
 
 import { auth } from './auth/firebaseConfig';
-import { user, logout } from '../stores/auth';
+import { user } from '../stores/auth';
 
 let email;
 let loggedInUser;
@@ -58,7 +58,7 @@ export async function editUser(email, is_leader, password, role) {
 		const url = SEND_URL + 'updateuser/';
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+			headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		const resData = await res.json();
@@ -108,9 +108,9 @@ export async function getUserDocData(email) {
 
 	try {
 		const res = await fetch(url, {
-			method: "GET",
+			method: 'GET',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			}
 		});
 		if (!res.ok) {
@@ -129,9 +129,9 @@ export async function toggleClub(userEmail, clubId) {
 	// SEND_URL = http://127.0.0.1:8000/
 	try {
 		const res = await fetch(url, {
-			method: "GET",
+			method: 'GET',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			}
 		});
 		if (!res.ok) {
@@ -156,7 +156,7 @@ export async function changeUserRole(email, newRole) {
 		console.log(toSend);
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+			headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		console.log(res);
@@ -169,9 +169,9 @@ export async function deleteUser(email) {
 	const url = SEND_URL + 'deleteuser/' + email;
 	try {
 		const res = await fetch(url, {
-			method: "GET",
+			method: 'GET',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			}
 		});
 		if (!res.ok) {
@@ -195,18 +195,25 @@ export async function toggleLeaderMentor(email, leaderMentor, toggle) {
 	console.log(toSend);
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+		headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 }
 
-export async function confirmMentorMenteeHours(confirm, catalog_id, mentee_email, mentor_email, mentee_hours, mentee_description) {
+export async function confirmMentorMenteeHours(
+	confirm,
+	catalog_id,
+	mentee_email,
+	mentor_email,
+	mentee_hours,
+	mentee_description
+) {
 	// confirm: int
-    // catalog_id: str
-    // mentee_email: str
-    // mentor_email: str
-    // mentee_hours: str
-    // mentee_description: str
+	// catalog_id: str
+	// mentee_email: str
+	// mentor_email: str
+	// mentee_hours: str
+	// mentee_description: str
 
 	const toSend = {
 		confirm,
@@ -215,14 +222,14 @@ export async function confirmMentorMenteeHours(confirm, catalog_id, mentee_email
 		mentor_email,
 		mentee_hours,
 		mentee_description
-	}
+	};
 
 	console.log(toSend);
 
-	const url = SEND_URL + "menteeconfirmhours";
+	const url = SEND_URL + 'menteeconfirmhours';
 	const res = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+		headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 	const resData = await res.json();
@@ -231,11 +238,11 @@ export async function confirmMentorMenteeHours(confirm, catalog_id, mentee_email
 }
 
 export async function getMentees() {
-	const url = SEND_URL + "getmentees";
+	const url = SEND_URL + 'getmentees';
 	const res = await fetch(url, {
-		method: "GET",
+		method: 'GET',
 		headers: {
-			"Authorization": `Basic ${encodedCredentials}`
+			Authorization: `Basic ${encodedCredentials}`
 		}
 	});
 	const resData = await res.json();

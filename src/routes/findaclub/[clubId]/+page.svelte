@@ -2,29 +2,28 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/stores';
 	import { getCollectionDoc } from '$lib/api';
-	import { Section, News, HeroHeader, HeroBody } from 'flowbite-svelte-blocks';
-	import { Button, P, Toast, Spinner, A, ButtonGroup, Modal, Fileupload } from 'flowbite-svelte';
-	import { ArrowRightOutline, VideoCameraSolid } from 'flowbite-svelte-icons';
-	import { user } from '../../../stores/auth';
-	import { writable } from 'svelte/store';
-	import { toggleClub } from '../../../lib/user';
-	import { fly } from 'svelte/transition';
-	import { getUserDocData } from '../../../lib/user';
-	import { Li, List, DescriptionList } from 'flowbite-svelte';
+	import { HeroBody, HeroHeader, Section } from 'flowbite-svelte-blocks';
 	import {
+		Button,
+		ButtonGroup,
+		DescriptionList,
+		List,
+		Modal,
 		Popover,
+		Spinner,
 		Table,
 		TableBody,
 		TableBodyCell,
 		TableBodyRow,
 		TableHead,
-		TableHeadCell,
-		Badge
+		TableHeadCell
 	} from 'flowbite-svelte';
-	import { slide } from 'svelte/transition';
-	import { PenOutline, ImageOutline } from 'flowbite-svelte-icons';
+	import { ImageOutline, PenOutline } from 'flowbite-svelte-icons';
+	import { user } from '../../../stores/auth';
+	import { writable } from 'svelte/store';
+	import { getUserDocData, toggleClub } from '../../../lib/user';
 	import RegisterForm from '../../registeryourclub/RegisterForm.svelte';
-	import { UploadClubImage, setClubImg } from '../../../lib/club';
+	import { setClubImg, UploadClubImage } from '../../../lib/club';
 
 	let isLoading = writable(false);
 	let showToast = writable(false);

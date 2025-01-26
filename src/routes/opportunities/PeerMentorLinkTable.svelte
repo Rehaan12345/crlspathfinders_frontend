@@ -1,47 +1,36 @@
 <script>
 	import { onMount } from 'svelte';
 	import {
-		Heading,
-		P,
-		Search,
+		Badge,
 		Button,
+		Checkbox,
+		Dropdown,
+		DropdownItem,
+		Input,
+		Label,
 		Modal,
+		MultiSelect,
+		Search,
+		Skeleton,
 		Spinner,
-		CardPlaceholder,
-		Skeleton
+		Textarea
 	} from 'flowbite-svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
 	import {
 		getCollection,
-		updateCache,
-		getDataFromLocalStorage,
-		setDataInLocalStorage,
-		removeDataFromLocalStorage,
-		clearLocalStorage,
-		wholeWebsiteData, 
+		getCollectionDoc,
 		updateWholeWebsiteData,
-		getCollectionDoc
+		wholeWebsiteData
 	} from '../../lib/api';
 	import { writable } from 'svelte/store';
 	import {
-		Label,
-		Input,
-		Select,
-		Textarea,
-		MultiSelect,
-		Badge,
-		Dropdown,
-		DropdownItem,
-		Checkbox
-	} from 'flowbite-svelte';
-	import {
-		addLink,
-		deleteLink,
-		editLink,
-		makeSelectCategoriesOk,
-		editCategories,
 		addCategory,
-		deleteCategory
+		addLink,
+		deleteCategory,
+		deleteLink,
+		editCategories,
+		editLink,
+		makeSelectCategoriesOk
 	} from '../../lib/peermentor';
 
 	let allReady = writable(false);
@@ -114,11 +103,11 @@
 			// NEED CACHING - Done
 			// peerMentorLinks = await updateCache('PeerMentorLinks');
 			if (all_opportunities) {
-				console.log("found opps");
+				console.log('found opps');
 				peerMentorLinks = all_opportunities;
 			} else {
-				console.log("not found opps");
-				peerMentorLinks = await getCollection("PeerMentorLinks");
+				console.log('not found opps');
+				peerMentorLinks = await getCollection('PeerMentorLinks');
 			}
 
 			for (let i = 0; i < categories.length; i++) {
@@ -140,7 +129,7 @@
 
 			// UPDATE PML locstor - Done
 			// await setDataInLocalStorage('PeerMentorLinks', peerMentorLinks);
-			peerMentorLinks = await getCollection("PeerMentorLinks");
+			peerMentorLinks = await getCollection('PeerMentorLinks');
 
 			console.log('Successfully added link');
 			linkName = '';
@@ -153,7 +142,7 @@
 			isLoading.set(false);
 			// NEED CACHE - Done
 			// peerMentorLinks = await updateCache('PeerMentorLinks');
-			peerMentorLinks = await getCollection("PeerMentorLinks");
+			peerMentorLinks = await getCollection('PeerMentorLinks');
 		}
 	};
 
@@ -175,7 +164,7 @@
 			isLoading.set(false);
 			// NEED CACHE - Done
 			// peerMentorLinks = await updateCache('PeerMentorLinks');
-			peerMentorLinks = await getCollection("PeerMentorLinks");
+			peerMentorLinks = await getCollection('PeerMentorLinks');
 			closeshowEditLinkModal();
 		}
 	};
@@ -202,8 +191,7 @@
 			// Update the peermentorlinks individual fields:
 			// NEED CACHE - Done
 			// peerMentorLinks = await updateCache('PeerMentorLinks');
-			peerMentorLinks = await getCollection("PeerMentorLinks");
-
+			peerMentorLinks = await getCollection('PeerMentorLinks');
 
 			let currPMLCats;
 			for (let i = 0; i < peerMentorLinks.length; i++) {
@@ -266,24 +254,24 @@
 
 	onMount(async () => {
 		allReady.set(false);
-		let targetId = wholeWebsiteData.findIndex(item => item.id === "opportunities");
+		let targetId = wholeWebsiteData.findIndex((item) => item.id === 'opportunities');
 		if (targetId > -1) {
 			peerMentorLinks = wholeWebsiteData[targetId].info;
 		} else {
 			peerMentorLinks = await getCollection('PeerMentorLinks');
-			updateWholeWebsiteData("opportunities", peerMentorLinks);
+			updateWholeWebsiteData('opportunities', peerMentorLinks);
 		}
 
-		targetId = wholeWebsiteData.findIndex(item => item.id === "categories");
+		targetId = wholeWebsiteData.findIndex((item) => item.id === 'categories');
 		if (targetId > -1) {
 			categories = wholeWebsiteData[targetId].info;
 		} else {
-			categories = await getCollectionDoc('Demographics', "PeerMentor");
-			updateWholeWebsiteData("categories", categories);
+			categories = await getCollectionDoc('Demographics', 'PeerMentor');
+			updateWholeWebsiteData('categories', categories);
 		}
 
 		categories = categories.categories;
-		
+
 		categories = makeSelectCategoriesOk(categories);
 		console.log(categories);
 		allReady.set(true);

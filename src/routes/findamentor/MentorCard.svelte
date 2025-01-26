@@ -1,45 +1,39 @@
 <script>
 	// Importing all of the functions, variables, and components to be used..
 	import { onMount } from 'svelte';
-	import { retrieveUserInfo, retrieveCollectionInfo } from '$lib/cache';
 	import {
-		Popover,
-		Card,
+		A,
+		Alert,
+		Avatar,
+		Badge,
 		Button,
 		ButtonGroup,
-		Spinner,
-		Avatar,
-		Toast,
-		P,
-		A,
+		Card,
 		CardPlaceholder,
-		Modal,
-		Dropdown,
 		Checkbox,
-		Heading,
+		Dropdown,
 		DropdownItem,
-		Badge,
-		Span,
-		Label,
-		Textarea,
+		Heading,
 		Input,
-		Alert,
-		Table,
-		TableBodyCell,
-		TableBodyRow,
+		Label,
+		Modal,
+		P,
+		Popover,
+		Search,
+		Span,
+		Spinner,
+		Textarea
 	} from 'flowbite-svelte';
 	import MultiSelect from 'svelte-multiselect';
-	import { ArrowRightOutline, ListMusicOutline } from 'flowbite-svelte-icons';
-	import { getCollection, getBackendCache, wholeWebsiteData, updateWholeWebsiteData, sendOneEmail } from '$lib/api';
+	import { BookOpenOutline, ChevronRightOutline, PenOutline } from 'flowbite-svelte-icons';
+	import { getCollection, sendOneEmail, updateWholeWebsiteData, wholeWebsiteData } from '$lib/api';
 	import { user } from '../../stores/auth';
-	import { getUserDocData, toggleClub, fetchUserInfo } from '../../lib/user';
+	import { getUserDocData } from '../../lib/user';
 	import { writable } from 'svelte/store';
-	import { PenOutline } from 'flowbite-svelte-icons';
 	import RegisterForm from '../becomeamentor/RegisterForm.svelte';
 	import { TableHeader } from 'flowbite-svelte-blocks';
-	import { Search } from 'flowbite-svelte';
 	import { retrieveDemographics, sendMentorMenteeLogs } from '../../lib/mentor';
-	import { ChevronRightOutline, BookOpenOutline } from 'flowbite-svelte-icons';
+
 	const SEND_URL = import.meta.env.VITE_URL;
 
 	// Declaring variables to be used:
@@ -71,10 +65,10 @@
 	// Logging mentor-mentee work:
 	let list_mentees = [];
 	let log_mentee = [];
-	let log_description = "";
+	let log_description = '';
 	let log_hours;
-	let logSuccessMessage = writable("");
-	let logFailMessage = writable("");
+	let logSuccessMessage = writable('');
+	let logFailMessage = writable('');
 	let logLoading = writable(false);
 
 	let currUser;
@@ -97,65 +91,72 @@
 
 	const checkLogInfo = () => {
 		if (log_mentee.length == 0) {
-			logSuccessMessage.set("");
-			logFailMessage.set("Select at least one mentee.")
+			logSuccessMessage.set('');
+			logFailMessage.set('Select at least one mentee.');
 			return false;
 		}
 		if (log_mentee.length > 1) {
-			logSuccessMessage.set("");
-			logFailMessage.set("Only select one mentee at a time.")
+			logSuccessMessage.set('');
+			logFailMessage.set('Only select one mentee at a time.');
 			return false;
 		}
 		if (log_description.length < 10) {
-			logSuccessMessage.set("");
-			logFailMessage.set("Description too short. Add more details.");
+			logSuccessMessage.set('');
+			logFailMessage.set('Description too short. Add more details.');
 			return false;
 		}
 		if (!log_hours) {
-			logSuccessMessage.set("");
-			logFailMessage.set("Select hours worked")
+			logSuccessMessage.set('');
+			logFailMessage.set('Select hours worked');
 			return false;
 		}
 		return true;
-	}
+	};
 
 	const handleLogMentors = async () => {
-		console.log("started");
+		console.log('started');
 		logLoading.set(true);
 		try {
 			if (checkLogInfo()) {
 				try {
-					await sendMentorMenteeLogs(currMentor.email, log_mentee[0].email, log_description, log_hours);
-					logFailMessage.set("");
-					logSuccessMessage.set("Your mentee has recieved an email to verify your hours. Once they confirm, your total hours will be updated. In the meantime, check your email from us (check spam), confirming the logging of your hours, and let us know if you have any questions.");
+					await sendMentorMenteeLogs(
+						currMentor.email,
+						log_mentee[0].email,
+						log_description,
+						log_hours
+					);
+					logFailMessage.set('');
+					logSuccessMessage.set(
+						'Your mentee has recieved an email to verify your hours. Once they confirm, your total hours will be updated. In the meantime, check your email from us (check spam), confirming the logging of your hours, and let us know if you have any questions.'
+					);
 					log_mentee = [];
-					log_description = "";
+					log_description = '';
 					log_hours = null;
 				} catch (error) {
-					logSuccessMessage.set("");
+					logSuccessMessage.set('');
 					logFailMessage.set(error);
 					console.log(error);
 				}
 			}
 		} catch (error) {
 			console.log(error);
-			logSuccessMessage.set("");
+			logSuccessMessage.set('');
 			logFailMessage.set(error);
-		}  finally {
-			mentors = await getCollection("Mentors");
+		} finally {
+			mentors = await getCollection('Mentors');
 			list_mentees = await setListMentees();
 			currMentor = currMentor;
 			for (let i = 0; i < mentors.length; i++) {
 				if (mentors[i].email.localeCompare(currMentor.email) === 0) {
-					console.log("Found currMentor");
+					console.log('Found currMentor');
 					hoursWorkedCatalog.set(mentors[i].hours_worked_catalog);
-					console.log("Set hwc");
+					console.log('Set hwc');
 				}
 			}
 			logLoading.set(false);
 		}
-		console.log("ended");
-	}
+		console.log('ended');
+	};
 
 	// Filter functionality
 	function toggleFilters(item) {
@@ -197,61 +198,77 @@
 	}
 
 	// This function isn't currently being used.
-    function filtersIncluded(mentor) {
-        console.log(mentor);
-        let all_info = [];
-        if (mentor.academics.length > 0) { all_info.push(mentor.academics); }
-        if (mentor.gender.length > 0) { all_info.push(mentor.gender); }
-        if (mentor.languages.length > 0) { all_info.push(mentor.languages); }
-        if (mentor.races.length > 0) { all_info.push(mentor.races); }
-        if (mentor.religions.length > 0) { all_info.push(mentor.religions); }
-        console.log(all_info);
-        console.log($filters.length);        
-        // if any of these are in filters, then return true.
-        for (let i = 0; i < all_info.length; i++) {
-            for (let j = 0; j < $filters.length; j++) {
-                if (all_info[i].localeCompare($filters[j]) === 0) {return true};
-            }
-        }
-        return false;
-    }
+	function filtersIncluded(mentor) {
+		console.log(mentor);
+		let all_info = [];
+		if (mentor.academics.length > 0) {
+			all_info.push(mentor.academics);
+		}
+		if (mentor.gender.length > 0) {
+			all_info.push(mentor.gender);
+		}
+		if (mentor.languages.length > 0) {
+			all_info.push(mentor.languages);
+		}
+		if (mentor.races.length > 0) {
+			all_info.push(mentor.races);
+		}
+		if (mentor.religions.length > 0) {
+			all_info.push(mentor.religions);
+		}
+		console.log(all_info);
+		console.log($filters.length);
+		// if any of these are in filters, then return true.
+		for (let i = 0; i < all_info.length; i++) {
+			for (let j = 0; j < $filters.length; j++) {
+				if (all_info[i].localeCompare($filters[j]) === 0) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	async function setListMentees() {
-		console.log("start set list mentees");
-		let all_users = await getCollection("Users");
+		console.log('start set list mentees');
+		let all_users = await getCollection('Users');
 		for (let i = 0; i < all_users.length; i++) {
 			const curr_mentee = all_users[i];
 			try {
-				if (curr_mentee["email"].localeCompare("25ranjaria@cpsd.us") === 0|| curr_mentee["grade"].localeCompare("Freshman") === 0 || curr_mentee["grade"].localeCompare("Sophomore") === 0) {
-					curr_mentee["label"] = curr_mentee.email;
+				if (
+					curr_mentee['email'].localeCompare('25ranjaria@cpsd.us') === 0 ||
+					curr_mentee['grade'].localeCompare('Freshman') === 0 ||
+					curr_mentee['grade'].localeCompare('Sophomore') === 0
+				) {
+					curr_mentee['label'] = curr_mentee.email;
 					list_mentees.push(curr_mentee);
 				}
 			} catch (error) {
-				console.log("Advisor found");
+				console.log('Advisor found');
 			}
 		}
 		return list_mentees;
 	}
 
 	// onMount function run whenever the page reloads (is an async function because we call await functions in the function).
-  	onMount(async () => {
+	onMount(async () => {
 		// By default wholeReady is false, and therefore no data is rendered onto the page.
 		wholeReady.set(false);
 		// Whole thing in try-catch block:
 		try {
 			let loggedInUser;
 
-			let targetId = wholeWebsiteData.findIndex(item => item.id === "mentors");
+			let targetId = wholeWebsiteData.findIndex((item) => item.id === 'mentors');
 			if (targetId > -1) {
 				mentors = wholeWebsiteData[targetId].info;
 				list_mentees = await setListMentees();
 			} else {
 				mentors = await getCollection('Mentors');
-				updateWholeWebsiteData("mentors", mentors);
+				updateWholeWebsiteData('mentors', mentors);
 				list_mentees = await setListMentees();
 			}
 
-			targetId = wholeWebsiteData.findIndex(item => item.id === "loggedInUser");
+			targetId = wholeWebsiteData.findIndex((item) => item.id === 'loggedInUser');
 			if (targetId > -1) {
 				loggedInUser = wholeWebsiteData[targetId].info;
 				email = loggedInUser.email;
@@ -260,7 +277,7 @@
 					if (value) {
 						email = value.email;
 						loggedInUser = await getUserDocData(email);
-						updateWholeWebsiteData("loggedInUser", loggedInUser);
+						updateWholeWebsiteData('loggedInUser', loggedInUser);
 					} else {
 						email = '';
 					}
@@ -268,26 +285,30 @@
 			}
 
 			let demographics;
-			targetId = wholeWebsiteData.findIndex(item => item.id === "demographics");
+			targetId = wholeWebsiteData.findIndex((item) => item.id === 'demographics');
 			if (targetId > -1) {
 				demographics = wholeWebsiteData[targetId].info;
 			} else {
 				demographics = await retrieveDemographics();
-				updateWholeWebsiteData("demographics", demographics);
+				updateWholeWebsiteData('demographics', demographics);
 			}
 
-			targetId = wholeWebsiteData.findIndex(item => item.id === "allinfo");
+			targetId = wholeWebsiteData.findIndex((item) => item.id === 'allinfo');
 			if (targetId > -1) {
 				const allInfo = wholeWebsiteData[targetId].info;
 				for (let i = 0; i < allInfo.length; i++) {
-					if (allInfo[i].id == "findamentor") { info = allInfo[i].info; }
+					if (allInfo[i].id == 'findamentor') {
+						info = allInfo[i].info;
+					}
 				}
 			} else {
-				const allInfo = await getCollection("AllInfo");
+				const allInfo = await getCollection('AllInfo');
 				for (let i = 0; i < allInfo.length; i++) {
-					if (allInfo[i].id == "findamentor") { info = allInfo[i].info; }
+					if (allInfo[i].id == 'findamentor') {
+						info = allInfo[i].info;
+					}
 				}
-				updateWholeWebsiteData("allinfo", allInfo);
+				updateWholeWebsiteData('allinfo', allInfo);
 			}
 
 			// console.log(demographics);
@@ -299,9 +320,12 @@
 			listGenders = demographics.genders;
 
 			// console.log(listReligions, listAcademics, listRaces, listLanguages, listGenders);
-
 		} catch (error) {
-			const sendMail = await sendOneEmail("mentor card on mount error", error, "crlspathfinders25@gmail.com")
+			const sendMail = await sendOneEmail(
+				'mentor card on mount error',
+				error,
+				'crlspathfinders25@gmail.com'
+			);
 			console.log(sendMail);
 			console.log('Onmount failed: ' + error);
 		} finally {
@@ -316,11 +340,15 @@
 	const closeshowEditModal = () => showEditModal.set(false);
 
 	const openshowLogsModal = () => showLogsModal.set(true);
-	const closeshowLogsModal = () => { showLogsModal.set(false); logSuccessMessage.set(""); logFailMessage.set(""); };
+	const closeshowLogsModal = () => {
+		showLogsModal.set(false);
+		logSuccessMessage.set('');
+		logFailMessage.set('');
+	};
 
 	const openShowCatalogModal = () => showCatalogModal.set(true);
 	const closeShowCatalogModal = () => showCatalogModal.set(false);
-	
+
 	const openShowMenteeLogs = () => showMenteeLogs.set(true);
 	const closeShowMenteeLogs = () => showMenteeLogs.set(false);
 </script>
@@ -329,7 +357,7 @@
 <Modal class="min-w-full" open={$showEditModal} on:close={closeshowEditModal}>
 	<!-- The <RegisterForm> is a component (components in Svelte are files, so you can see the code for this components in the becomeamentor folder!) that controls the editing view. The {data} in brackets are parameters that I pass to indicate *editing*, and not *creating* a mentor. -->
 	<RegisterForm {view} {currMentor} {showVals}></RegisterForm>
-	<br><br><br>
+	<br /><br /><br />
 </Modal>
 
 <!-- Mentor Logging Modal: -->
@@ -345,7 +373,7 @@
 				placeholder="Select mentee"
 			></MultiSelect>
 		</Label>
-		<br>
+		<br />
 		<Label>Brief description of what went on</Label>
 		<Textarea
 			id="logdescription"
@@ -355,25 +383,18 @@ They asked me for help in ...
 We met at the library and worked on ..."
 			bind:value={log_description}
 		></Textarea>
-		<br>
+		<br />
 		<Label>How many hours did you work?</Label>
-		<Input
-			type="number"
-			id="loghours"
-			placeholder="10"
-			bind:value={log_hours}
-		/>
-		<br>
+		<Input type="number" id="loghours" placeholder="10" bind:value={log_hours} />
+		<br />
 		{#if $logLoading}
 			<Button disabled type="submit" color="green" outline class="w-full">
-				Loading <Spinner color="green" size="6"/>
+				Loading <Spinner color="green" size="6" />
 			</Button>
 		{:else}
-			<Button type="submit" color="green" class="w-full">
-				Submit
-			</Button>
+			<Button type="submit" color="green" class="w-full">Submit</Button>
 		{/if}
-		<br><br>
+		<br /><br />
 		{#if $logFailMessage.length > 1}
 			<Alert color="red">
 				<span class="font-medium">Failed:</span>
@@ -386,12 +407,27 @@ We met at the library and worked on ..."
 			</Alert>
 		{/if}
 	</form>
-	<hr>
+	<hr />
 	<P size="xl">Completed Hours</P>
 	<P size="md">
-		In order for your hours to count towards your total, your mentee needs to confirm their hours. Please remind them to check their email or send us an <u><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">email</a></u> if they have any problems.
-		<br>
-		Something doesn't look right? Let us know at <u><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">crlspathfinders25@gmail.com</a></u>
+		In order for your hours to count towards your total, your mentee needs to confirm their hours.
+		Please remind them to check their email or send us an <u
+			><a
+				target="_blank"
+				href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support"
+				>email</a
+			></u
+		>
+		if they have any problems.
+		<br />
+		Something doesn't look right? Let us know at
+		<u
+			><a
+				target="_blank"
+				href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support"
+				>crlspathfinders25@gmail.com</a
+			></u
+		>
 	</P>
 	<div>
 		<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
@@ -411,26 +447,32 @@ We met at the library and worked on ..."
 							<tr class="border-b">
 								<td class="px-4 py-3 text-gray-800">{i + 1} | {c.mentee}</td>
 								{#if openRow === i}
-									<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, c)}>
+									<td
+										class="px-4 py-3 text-gray-700"
+										style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word"
+										on:click={() => toggleRow(i, c)}
+									>
 										<div class="mentordescription">
 											{c.description}
 										</div>
 									</td>
+								{:else if c.description.length > 50}
+									<td
+										class="px-4 py-3 text-gray-700"
+										style="cursor:pointer;"
+										on:click={() => toggleRow(i, c)}
+									>
+										<div class="mentordescription">
+											{handleDesc(c.description)}
+										</div>
+									</td>
 								{:else}
-									{#if c.description.length > 50 }
-										<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, c)}>
-											<div class="mentordescription">
-												{handleDesc(c.description)}
-											</div>
-										</td>
-									{:else}
-										<td class="px-4 py-3 text-gray-700">
-											<div class="mentordescription">
-												{handleDesc(c.description)}
-											</div>
-										</td>
-									{/if}
-								{/if}	
+									<td class="px-4 py-3 text-gray-700">
+										<div class="mentordescription">
+											{handleDesc(c.description)}
+										</div>
+									</td>
+								{/if}
 
 								<td class="px-4 py-3 text-gray-700">{c.hours}</td>
 								<td class="px-4 py-3 text-gray-700">{c.date}</td>
@@ -447,7 +489,9 @@ We met at the library and worked on ..."
 						{/each}
 						<tr class="border-b">
 							<td class="px-4 py-3 text-gray-800">
-								<Badge color="green">Total hours worked: <b> {currMentor.total_hours_worked}</b></Badge>
+								<Badge color="green"
+									>Total hours worked: <b> {currMentor.total_hours_worked}</b></Badge
+								>
 							</td>
 						</tr>
 					</tbody>
@@ -456,7 +500,9 @@ We met at the library and worked on ..."
 		</div>
 	</div>
 	<Button color="dark" outline>
-		<a target="_blank" href="https://secure1.cpsd.us/forms/Community_Service_Form.pdf">Get your community service hours here</a>
+		<a target="_blank" href="https://secure1.cpsd.us/forms/Community_Service_Form.pdf"
+			>Get your community service hours here</a
+		>
 	</Button>
 </Modal>
 
@@ -482,25 +528,31 @@ We met at the library and worked on ..."
 								<td class="px-4 py-3 text-gray-700">{c.hours}</td>
 								<!-- <td class="px-4 py-3 text-gray-700">{c.description}</td> -->
 								{#if openRow === i}
-									<td class="px-4 py-3 text-gray-700" style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word" on:click={() => toggleRow(i, c)}>
+									<td
+										class="px-4 py-3 text-gray-700"
+										style="cursor:pointer; height:10rem;max-width:20rem; word-wrap:break-word"
+										on:click={() => toggleRow(i, c)}
+									>
 										<div class="mentordescription">
 											{c.description}
 										</div>
 									</td>
+								{:else if c.description.length > 50}
+									<td
+										class="px-4 py-3 text-gray-700"
+										style="cursor:pointer;"
+										on:click={() => toggleRow(i, c)}
+									>
+										<div class="mentordescription">
+											{handleDesc(c.description)}
+										</div>
+									</td>
 								{:else}
-									{#if c.description.length > 50 }
-										<td class="px-4 py-3 text-gray-700" style="cursor:pointer;" on:click={() => toggleRow(i, c)}>
-											<div class="mentordescription">
-												{handleDesc(c.description)}
-											</div>
-										</td>
-									{:else}
-										<td class="px-4 py-3 text-gray-700">
-											<div class="mentordescription">
-												{handleDesc(c.description)}
-											</div>
-										</td>
-									{/if}
+									<td class="px-4 py-3 text-gray-700">
+										<div class="mentordescription">
+											{handleDesc(c.description)}
+										</div>
+									</td>
 								{/if}
 								<td class="px-4 py-3 text-gray-700">{c.date_confirmed}</td>
 								<td class="px-4 py-3 text-gray-700">{c.date_met}</td>
@@ -518,7 +570,7 @@ We met at the library and worked on ..."
 						<!-- <tr class="border-b">
 							<td class="px-4 py-3 text-gray-800">Total hours worked: <b>{currMentor.total_hours_worked}</b></td>
 						</tr> -->
-						</tbody>
+					</tbody>
 				</table>
 			</div>
 		</div>
@@ -528,7 +580,15 @@ We met at the library and worked on ..."
 <!-- Mentor Catalog Modal: (not being used ATM) -->
 <Modal class="min-w-full" open={$showCatalogModal} on:close={closeShowCatalogModal}>
 	<P size="xl">Mentor Hours</P>
-	<P size="md">Something doesn't look right? Let us know at <u><a target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support">crlspathfinders25@gmail.com</a></u></P>
+	<P size="md"
+		>Something doesn't look right? Let us know at <u
+			><a
+				target="_blank"
+				href="https://mail.google.com/mail/?view=cm&fs=1&to=crlspathfinders25@gmail.com&su=CRLS%20PathFinders%20Support"
+				>crlspathfinders25@gmail.com</a
+			></u
+		></P
+	>
 	<div>
 		<div class="bg-white relative shadow-md sm:rounded-lg overflow-hidden">
 			<div class="overflow-x-auto">
@@ -571,10 +631,9 @@ We met at the library and worked on ..."
 </Modal>
 
 {#if $wholeReady}
-
-<!-- This div holds all of the information. -->
-<div class="wholementorwrapper bg-gray-100" style="height:100%;">
-	<!-- The data is only shown when wholeReady is true (which means all of the data has been successfully requested). Remember that the wholeReady is a boolean store variable. To access the value of a store variable, we put the dollar sign $ before the name of the variable, indicating reactivity. -->
+	<!-- This div holds all of the information. -->
+	<div class="wholementorwrapper bg-gray-100" style="height:100%;">
+		<!-- The data is only shown when wholeReady is true (which means all of the data has been successfully requested). Remember that the wholeReady is a boolean store variable. To access the value of a store variable, we put the dollar sign $ before the name of the variable, indicating reactivity. -->
 		<div class="infowrapper" style="margin-left:3rem;margin-right:3rem;margin-top:1rem;">
 			<!-- This is all data that should NOT be hard-coded, but we will fix this later once the more pressing issues are solved. -->
 			<Heading tag="h4" customSize="text-4xl font-extrabold" class="dark:text-red-900">
@@ -623,9 +682,18 @@ We met at the library and worked on ..."
 								openshowEditModal();
 							}}>Edit Mentor Profile<PenOutline size="md"></PenOutline></Button
 						>
-							<Button outline size="md" color="blue" on:click={() => {openshowLogsModal(); currMentor = m; hoursWorkedCatalog.set(m.hours_worked_catalog); }}>
-								Log Mentor Hours <BookOpenOutline size="md"></BookOpenOutline>
-							</Button>
+						<Button
+							outline
+							size="md"
+							color="blue"
+							on:click={() => {
+								openshowLogsModal();
+								currMentor = m;
+								hoursWorkedCatalog.set(m.hours_worked_catalog);
+							}}
+						>
+							Log Mentor Hours <BookOpenOutline size="md"></BookOpenOutline>
+						</Button>
 						<!-- <Button size="md" pill color="green" on:click={() => {openShowCatalogModal(); currMentor = m;}}>
 							Mentor Catalog <BookOpenOutline size="md"></BookOpenOutline>
 						</Button> -->
@@ -633,9 +701,15 @@ We met at the library and worked on ..."
 				{/if}
 			{/each}
 			{#if userInfo && userInfo.is_mentee}
-				<Button color="purple" outline size="md" on:click={() => {
-					currUser = userInfo;
-					openShowMenteeLogs()}}>
+				<Button
+					color="purple"
+					outline
+					size="md"
+					on:click={() => {
+						currUser = userInfo;
+						openShowMenteeLogs();
+					}}
+				>
 					View Mentee Logs
 				</Button>
 			{/if}
@@ -645,12 +719,7 @@ We met at the library and worked on ..."
 		<div class="searchwrapper" style="margin-right:3rem;margin-left:3rem;margin-top:1rem;">
 			<TableHeader headerType="search">
 				<!-- The syntax bin:value={searching} is unique to svelte. It tells svelte to update the variable searching (that we declared above) everything the <Search> input component changes. -->
-				<Search
-					bind:value={searching}
-					slot="search"
-					placeholder="Search mentors"
-					size="md"
-				/>
+				<Search bind:value={searching} slot="search" placeholder="Search mentors" size="md" />
 				<div class=""></div>
 				<Button outline color="blue">Filters</Button>
 				<Dropdown class="w-48 p-3 space-y-2 text-sm">
@@ -826,7 +895,16 @@ We met at the library and worked on ..."
 									<!-- The information of each mentor listed out. -->
 									<!-- To show the value of a mentor in svelte, you enclose the variable in {brackets}. -->
 									{#if m.email == email}
-										<Button size="xs" pill outline color="blue" on:click={() => {openshowLogsModal(); currMentor = m;}}>
+										<Button
+											size="xs"
+											pill
+											outline
+											color="blue"
+											on:click={() => {
+												openshowLogsModal();
+												currMentor = m;
+											}}
+										>
 											<BookOpenOutline size="md"></BookOpenOutline>
 										</Button>
 									{/if}
@@ -848,9 +926,11 @@ We met at the library and worked on ..."
 											}}><PenOutline size="xs"></PenOutline></Button
 										>
 									{/if}
-									<br>
+									<br />
 									{#if m.email == email}
-										<center><Badge color="yellow">{m.total_hours_worked} hours worked</Badge></center>
+										<center
+											><Badge color="yellow">{m.total_hours_worked} hours worked</Badge></center
+										>
 									{:else}
 										<center><Badge color="blue">{m.total_hours_worked} hours worked</Badge></center>
 									{/if}
@@ -892,11 +972,16 @@ We met at the library and worked on ..."
 										<Button disabled outline color="blue" id="disabledmessagebutton" class="">
 											Message
 										</Button>
-										<Popover class="w-64 text-sm font-light " title="Make an account first!" triggeredBy="#disabledmessagebutton">
+										<Popover
+											class="w-64 text-sm font-light "
+											title="Make an account first!"
+											triggeredBy="#disabledmessagebutton"
+										>
 											<p class="text-gray-800">
 												You can only message mentors when you have an account!
-												<br><br>
-												<u><a href="/auth/login">Log in</a></u> or <u><a href="/auth/signup">Sign up</a></u>
+												<br /><br />
+												<u><a href="/auth/login">Log in</a></u> or
+												<u><a href="/auth/signup">Sign up</a></u>
 											</p>
 										</Popover>
 									{/if}
@@ -907,25 +992,23 @@ We met at the library and worked on ..."
 				{/if}
 			{/each}
 		</div>
-	
-</div>
+	</div>
 {:else}
-		<!-- This else refers to if $wholeReady is false, in which case a loading message will show. -->
-		<center>
-			<div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
-				Loading Mentors ... <Spinner color="blue" />
-			</div>
-		</center>
-
-		<div class="card-container">
-			<CardPlaceholder />
-			<CardPlaceholder />
-			<CardPlaceholder />
-			<CardPlaceholder />
-			<CardPlaceholder />
+	<!-- This else refers to if $wholeReady is false, in which case a loading message will show. -->
+	<center>
+		<div class="loadingwrapper" style="font-size:large; margin-top:1rem;">
+			Loading Mentors ... <Spinner color="blue" />
 		</div>
-{/if}
+	</center>
 
+	<div class="card-container">
+		<CardPlaceholder />
+		<CardPlaceholder />
+		<CardPlaceholder />
+		<CardPlaceholder />
+		<CardPlaceholder />
+	</div>
+{/if}
 
 <style>
 	/* Here are some styling. */

@@ -1,39 +1,11 @@
 <script>
 	import { onMount } from 'svelte';
-	import {
-		Table,
-		TableBody,
-		TableBodyCell,
-		TableBodyRow,
-		TableHead,
-		TableHeadCell,
-		TableSearch,
-		Button,
-		Dropdown,
-		DropdownItem,
-		Checkbox,
-		ButtonGroup,
-		A,
-		Modal,
-		Spinner,
-		ListPlaceholder,
-		Search
-	} from 'flowbite-svelte';
-	import { Section } from 'flowbite-svelte-blocks';
+	import { ListPlaceholder, Spinner } from 'flowbite-svelte';
 	// import paginationData from '../utils/advancedTable.json'
-	import {
-		PlusOutline,
-		ChevronDownOutline,
-		FilterSolid,
-		ChevronRightOutline,
-		ChevronLeftOutline
-	} from 'flowbite-svelte-icons';
 	import { getCollection } from '../../../lib/api';
-	import EditMentor from '../mentors/EditMentor.svelte';
 	// import EditMentor from "./EditMentor.svelte";
 	import { writable } from 'svelte/store';
 	import { deleteMentor } from '../../../lib/mentor';
-	import { TableHeader } from 'flowbite-svelte-blocks';
 	import PeerMentorLinkTable from '../../opportunities/PeerMentorLinkTable.svelte';
 
 	let wholeReady = writable(false);

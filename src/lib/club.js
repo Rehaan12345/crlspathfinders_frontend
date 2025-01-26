@@ -3,7 +3,7 @@ const username = import.meta.env.VITE_AUTH_USERNAME;
 const password = import.meta.env.VITE_AUTH_PASSWORD;
 const encodedCredentials = btoa(`${username}:${password}`); // Base64 encode
 
-import { retrieveUserInfo, retrieveCollectionInfo, updateCache } from '$lib/cache';
+import { retrieveCollectionInfo, retrieveUserInfo } from '$lib/cache';
 
 export async function createClub(
 	advisor_email,
@@ -46,7 +46,7 @@ export async function createClub(
 		const url = SEND_URL + 'createclub/';
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+			headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		const resData = await res.json();
@@ -55,7 +55,7 @@ export async function createClub(
 		console.log(status);
 		// have to read the value of status and determine whether or not to proceed:
 		if (status === -16) {
-			return resData["error_message"];
+			return resData['error_message'];
 		}
 
 		console.log('Successfully retrieved message: ' + status);
@@ -111,7 +111,7 @@ export async function editClub(
 		const url = SEND_URL + 'updateclub/';
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+			headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		const resData = await res.json();
@@ -150,7 +150,7 @@ export async function changeStatus(secret_password, status) {
 		const url = SEND_URL + 'changestatus/';
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+			headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		const resData = await res.json();
@@ -169,9 +169,9 @@ export async function deleteClub(clubId) {
 	const url = SEND_URL + 'deleteclub/' + clubId;
 	try {
 		const res = await fetch(url, {
-			method: "GET",
+			method: 'GET',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			}
 		});
 		if (!res.ok) {
@@ -194,7 +194,7 @@ export async function verifyClub(secret_password) {
 	try {
 		const res = await fetch(url, {
 			method: 'POST',
-			headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+			headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 			body: JSON.stringify(toSend)
 		});
 		if (!res.ok) {
@@ -220,7 +220,7 @@ export async function UploadClubImage(file) {
 		let response = await fetch(url, {
 			method: 'POST',
 			headers: {
-				"Authorization": `Basic ${encodedCredentials}`
+				Authorization: `Basic ${encodedCredentials}`
 			},
 			body: formData
 		});
@@ -250,7 +250,7 @@ export async function setClubImg(imgUrl, clubId, oldId) {
 	const url = SEND_URL + 'setclubimg';
 	let response = await fetch(url, {
 		method: 'POST',
-		headers: { 'Content-type': 'application/json', "Authorization": `Basic ${encodedCredentials}` },
+		headers: { 'Content-type': 'application/json', Authorization: `Basic ${encodedCredentials}` },
 		body: JSON.stringify(toSend)
 	});
 	return response;

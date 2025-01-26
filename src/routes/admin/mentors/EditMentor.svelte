@@ -1,7 +1,6 @@
 <script>
-	import { Label, Input, Button, Modal, Textarea, Select } from 'flowbite-svelte';
+	import { Modal } from 'flowbite-svelte';
 	import RegisterForm from '../../becomeamentor/RegisterForm.svelte';
-	import Register from '../../becomeamentor/Register.svelte';
 
 	let selected = '';
 	let view = 'Edit';
