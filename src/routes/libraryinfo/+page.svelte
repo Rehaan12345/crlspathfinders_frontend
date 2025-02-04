@@ -30,12 +30,12 @@
 	}
 
 	if (typeof window !== 'undefined') {
-		windowWidth = screen.width;
+		windowWidth = Math.min(screen.width, window.innerWidth);
 		console.log(windowWidth);
 		columns = Math.max(1, Math.floor((windowWidth - 100) / 384));
 
 		window.addEventListener('resize', () => {
-			windowWidth = screen.width;
+			windowWidth = Math.min(screen.width, window.innerWidth);
 			console.log(windowWidth);
 			columns = Math.max(1, Math.floor((windowWidth - 100) / 384));
 		});
